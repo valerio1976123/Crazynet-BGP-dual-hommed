@@ -1,0 +1,100 @@
+
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname ISP-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no shutdown
+ ip address 172.16.4.2 255.255.255.0
+!
+interface Ethernet0/1
+ no shutdown
+ ip address 172.16.2.1 255.255.255.0
+!
+interface Ethernet0/2
+ no shutdown
+ ip address 10.10.10.2 255.255.255.252
+!
+interface Ethernet0/3
+ no shutdown
+ no ip address
+ shutdown
+!
+router bgp 65003
+ bgp log-neighbor-changes
+ network 10.10.10.0 mask 255.255.255.252
+ network 172.16.2.0 mask 255.255.255.0
+ network 172.16.4.0 mask 255.255.255.0
+ network 192.168.10.0 mask 255.255.255.128
+ neighbor 10.10.10.1 remote-as 65002
+ neighbor 10.10.10.1 description eBGP_Remote_AS65002
+ neighbor 172.16.2.2 remote-as 65001
+ neighbor 172.16.2.2 description eBGP_Remote_AS65001
+ neighbor 172.16.4.1 remote-as 65004
+ neighbor 172.16.4.1 description eBGp_Remote_AS65004
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+!
+!
+end
