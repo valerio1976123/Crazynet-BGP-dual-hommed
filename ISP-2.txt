@@ -2,7 +2,7 @@
 service timestamps debug datetime msec
 service timestamps log datetime msec
 !
-hostname ISP-2
+hostname ISP-3
 !
 boot-start-marker
 boot-end-marker
@@ -46,32 +46,198 @@ multilink bundle-name authenticated
 !
 !
 !
+interface Loopback1
+ ip address 8.8.8.8 255.255.255.0
+!
 interface Ethernet0/0
- ip address 172.16.4.2 255.255.255.0
+ ip address 172.16.3.1 255.255.255.0
 !
 interface Ethernet0/1
- ip address 172.16.2.1 255.255.255.0
+ ip address 172.16.4.1 255.255.255.0
 !
 interface Ethernet0/2
- ip address 10.10.10.2 255.255.255.252
+ no ip address
+ shutdown
 !
 interface Ethernet0/3
  no ip address
  shutdown
 !
-router bgp 65003
+router bgp 65004
  bgp log-neighbor-changes
- network 10.10.10.0 mask 255.255.255.252
- network 172.16.2.0 mask 255.255.255.0
+ network 8.8.8.0 mask 255.255.255.0
+ network 172.16.3.0 mask 255.255.255.0
  network 172.16.4.0 mask 255.255.255.0
+ network 192.168.10.0
  network 192.168.10.0 mask 255.255.255.128
- neighbor 10.10.10.1 remote-as 65002
- neighbor 10.10.10.1 description eBGP_Remote_AS65002
- neighbor 172.16.2.2 remote-as 65001
- neighbor 172.16.2.2 description eBGP_Remote_AS65001
- neighbor 172.16.4.1 remote-as 65004
- neighbor 172.16.4.1 description eBGp_Remote_AS65004
- maximum-paths 3
+ neighbor 172.16.3.2 remote-as 65002
+ neighbor 172.16.3.2 description eBGP_AS65002
+ neighbor 172.16.4.2 remote-as 65003
+ neighbor 172.16.4.2 description eBGP_AS65003
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+!
+!
+!
+!
+control-plane
+!
+
+ISP-3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+ISP-3(config)#router bgp 65004
+ISP-3(config-router)#max
+ISP-3(config-router)#maximum-paths 2
+ISP-3(config-router)#^Z
+ISP-3#wr
+Building configuration...
+[OK]
+ISP-3#
+*May 16 08:40:20.463: %SYS-5-CONFIG_I: Configured from console by console
+ISP-3#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ISP-3 con0 is now available
+
+
+
+
+
+Press RETURN to get started.
+
+
+
+
+
+
+
+ISP-3>
+ISP-3>
+ISP-3>
+ISP-3>
+ISP-3>
+ISP-3>en
+ISP-3#wr
+Building configuration...
+[OK]
+ISP-3#sho run
+Building configuration...
+
+Current configuration : 1175 bytes
+!
+! Last configuration change at 08:40:20 UTC Tue May 16 2023
+!
+version 15.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname ISP-3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 8.8.8.8 255.255.255.0
+!
+interface Ethernet0/0
+ ip address 172.16.3.1 255.255.255.0
+!
+interface Ethernet0/1
+ ip address 172.16.4.1 255.255.255.0
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+!
+router bgp 65004
+ bgp log-neighbor-changes
+ network 8.8.8.0 mask 255.255.255.0
+ network 172.16.3.0 mask 255.255.255.0
+ network 172.16.4.0 mask 255.255.255.0
+ network 192.168.10.0
+ network 192.168.10.0 mask 255.255.255.128
+ neighbor 172.16.3.2 remote-as 65002
+ neighbor 172.16.3.2 description eBGP_AS65002
+ neighbor 172.16.4.2 remote-as 65003
+ neighbor 172.16.4.2 description eBGP_AS65003
+ maximum-paths 2
 !
 ip forward-protocol nd
 !
@@ -93,3 +259,4 @@ line vty 0 4
 !
 !
 end
+
