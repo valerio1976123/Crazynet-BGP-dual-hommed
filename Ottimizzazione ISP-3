@@ -1,0 +1,27 @@
+router bgp 65004
+ bgp log-neighbor-changes
+ network 172.16.3.0 mask 255.255.255.0
+ network 172.16.4.0 mask 255.255.255.0
+ network 192.168.10.0
+ network 192.168.10.0 mask 255.255.255.128
+ neighbor 172.16.3.2 remote-as 65002
+ neighbor 172.16.3.2 description eBGP_AS65002
+ neighbor 172.16.4.2 remote-as 65003
+ neighbor 172.16.4.2 description eBGP_AS65003
+ neighbor 172.16.3.2 password <password>  // Aggiungi una password per l'autenticazione BGP
+ neighbor 172.16.3.2 update-source Ethernet0/0  // Specifica l'interfaccia sorgente per le comunicazioni BGP
+ neighbor 172.16.3.2 ebgp-multihop 2  // Abilita eBGP multihop se il peer esterno non è direttamente collegato
+ neighbor 172.16.3.2 fall-over bfd  // Abilita BFD (Bidirectional Forwarding Detection) per il failover rapido
+ neighbor 172.16.3.2 maximum-routes 2000  // Limita il numero massimo di route che il peer può inviare
+ neighbor 172.16.3.2 send-community  // Consenti l'invio di attributi BGP community al peer
+ neighbor 172.16.3.2 route-map INBOUND in  // Applica un route-map per il filtraggio delle route in ingresso
+ neighbor 172.16.3.2 route-map OUTBOUND out  // Applica un route-map per il filtraggio delle route in uscita
+ neighbor 172.16.3.2 soft-reconfiguration inbound  // Abilita la soft reconfiguration per il peer
+
+ip prefix-list FILTER_ROUTES permit 192.168.10.0/25  // Definisci una prefix-list per le route in ingresso
+
+route-map INBOUND permit 10  // Configura il route-map per il filtraggio delle route in ingresso
+ match ip address prefix-list FILTER_ROUTES
+
+route-map OUTBOUND permit 10  // Configura il route-map per il filtraggio delle route in uscita
+ match ip address prefix-list FILTER_ROUTES
