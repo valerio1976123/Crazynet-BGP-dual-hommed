@@ -74,6 +74,7 @@ router bgp 65001
  neighbor 172.16.2.1 description eBGP_Remote_AS65003
  neighbor 192.168.10.129 remote-as 65001
  neighbor 192.168.10.129 description iBGP_Remote_AS65001
+ neighbor 192.168.10.129 next-hop-self
  neighbor 192.168.10.129 route-map PREPEND_ROUTES out
  maximum-paths 2
 !
